@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block content %}
+{% for article in articles %}
+<form method="post" action="{% url 'upvote' %}" class="vote_form">
+  {% csrf_token %}
+  <div class="row">
+    <div class="col-md-10 col-sm-9">
+      <h3>
+        <a href="{{article.article_url}}">{{article.article_title}}</a>
+      </h3>
+      <div class="row">
+        <div class="col-xs-9">
+          <h4><span class="label label-default upvotecount">{{article.article_upvotes}} upvotes</span></h4><h4>
+          <small style="font-family:courier,'new courier';" class="text-muted">
+            <button id="upvote_btn">
+              {% if article.pk not in voted %}Upvote{% else %}Upvoted{% endif %}</button>
+              Added on {{article.article_addeddate}}
+              <input type="hidden" id ="articleId" value="{{article.id}}" class="hidden_id" />
+            </form>
+          </small>
+        </h4></div>
+        <div class="col-xs-3"></div>
+      </div>
+      <br>
+    </div>
+  </div>
+</form>
+{% endfor %}
+<hr>
+<div class="pull-right">
+  <ul class="pagination">
+    {% if articles.has_previous %}
+    <li><a href="?page={{ articles.previous_page_number }}">previous</a></li>
+    {% else %}
+    <li class="disabled"><span>previous</span></li>
+    {% endif %}
+    {% if articles.has_next %}
+    <li><a href="?page={{ articles.next_page_number }}">next</a></li>
+    {% else %}
+    <li class="disabled"><span>next</span></li>
+    {% endif %}
+  </ul>
+</div>
+{% endblock %}
+{% block script %}
+<script src="{% static 'js/main.js' %}"></script>
+<script src="{% static 'js/csrf.js' %}"></script>
+{% endblock %}
